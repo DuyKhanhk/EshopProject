@@ -1,4 +1,5 @@
 ﻿@model Eshop.Models.Product
+@using Eshop.Helpers
 
 @{
     ViewData["Title"] = "Details";
@@ -59,35 +60,72 @@
 						<dt class="col-sm-3">Sản phẩm có sẵn</dt>
 						<dd class="col-sm-9">@Html.DisplayFor(model => model.Stock)</dd>
 					</dl>
-
+					@*<form asp-action="AddToCart" asp-controller="Carts" asp-route-id="@Model.Id" >*@
 					<div class="form-row  mt-4">
 						<div class="form-group col-md flex-grow-0">
 							<div class="input-group mb-3 input-spinner">
-								<div class="input-group-prepend">
-									<button class="btn btn-light" type="button" id="button-plus"> + </button>
-								</div>
-								<input type="text" class="form-control" value="1">
-								<div class="input-group-append">
-									<button class="btn btn-light" type="button" id="button-minus"> &minus; </button>
-								</div>
+								@*<div class="input-group-prepend">
+									<button class="btn btn-outline-primary js-btn-plus" type="button" > &plus; </button>
+								</div>*@
+								<input type="number" step="1" min="1" class="carousel-inner text-center" value="1" id="quantity" aria-label="none" aria-describedby="button-addon1">
+								@*<div class="input-group-append">
+										<button class="btn btn-outline-primary js-btn-minus" type="button"> &minus; </button>
+								</div>*@
 							</div>
 						</div> <!-- col.// -->
 						<div class="form-group col-md">
-							<a href="#" class="btn  btn-primary">
-								<i class="fas fa-shopping-cart"></i> <span class="text">Thêm vào giỏ hàng</span>
-							</a>
+								<button type="button" class="ajax-add-to-cart buy-now btn btn-outline-primary" data-id="@Model.Id"> <i class="fa-solid fa-cart-shopping"></i> Thêm vào giỏ hàng </button>
 							<a href="#" class="btn btn-light">
 								<i class="fas fa-envelope"></i> <span class="text">Mua ngay</span>
 							</a>
 						</div> <!-- col.// -->
 					</div> <!-- row.// -->
-
+					@*</form>*@
 				</article> <!-- product-info-aside .// -->
 			</main> <!-- col.// -->
-		</div> <!-- row.// -->
+		</div> <!-- row.// 
 		<!-- ================ ITEM DETAIL END .// ================= -->
 
 
 	</div> <!-- container .//  -->
 </section>
-<!-- ========================= SECTION CONTENT END// ========================= 
+
+
+@section scripts{
+	
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+	<script>
+		$(document).ready(function () {
+			$(".ajax-add-to-cart").click(function () {
+				$.ajax({
+					url: "/Carts/AddToCart",
+					data: {
+						id: $(this).data("id"),
+						quantity: $("#quantity").val(),
+						type: "ajax"
+					},
+					success: function (data) {
+						console.log(data);
+						Swal.fire({
+							position: 'top-end',
+							icon: 'success',
+							title: 'Đã thêm vào giỏi hàng!',
+							showConfirmButton: false,
+							timer: 1500
+						})
+						$("#cart_count").html(data.quantity)
+					},
+					error: function () {
+						Swal.fire({
+							icon: 'error',
+							title: 'Chưa thêm vào giỏi hàng!',
+							text: 'Vui lòng đăng nhập',
+							showConfirmButton: false,
+							timer: 1500
+						})
+					}
+				});
+			});
+		})
+	</script>
+}

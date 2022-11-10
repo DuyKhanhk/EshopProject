@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Eshop.Models
 {
@@ -20,6 +21,13 @@ namespace Eshop.Models
         [DataType(DataType.Password)]
         [StringLength(255,MinimumLength = 6, ErrorMessage = "{0} từ 6 kí tự")]
         public string Password { get; set; }
+
+        [NotMapped]
+        [Display(Name = "Xác nhận mật khẩu")]
+        [DataType(DataType.Password)]
+        //[Required(ErrorMessage = "Xác nhận mật khẩu")]
+        [Compare("Password", ErrorMessage = "Mật khẩu và mật khẩu xác nhận không khớp.")]
+        public string ConfirmPassword { get; set; }
 
         [DisplayName("Email")]
         [EmailAddress(ErrorMessage = "{0} không hợp lệ")]

@@ -1,0 +1,177 @@
+﻿@model IEnumerable<Eshop.Models.Product>
+
+@{
+    ViewData["Title"] = "Search";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="section-content padding-y">
+<div class="container">
+
+<div class="card mb-3">
+<header class="mb-3">
+		<div class="form-inline">
+			<strong class="mr-md-auto"> Có @Model.Count().ToString() sản phẩm</strong>
+			<select class="mr-2 form-control">
+				<option>Latest items</option>
+				<option>Trending</option>
+				<option>Most Popular</option>
+				<option>Cheapest</option>
+			</select>
+			<div class="btn-group">
+				<a href="page-listing-grid.html" class="btn btn-light" data-toggle="tooltip" title="List view"> 
+					<i class="fa fa-bars"></i></a>
+				<a href="page-listing-large.html" class="btn btn-light active" data-toggle="tooltip" title="Grid view"> 
+					<i class="fa fa-th"></i></a>
+			</div>
+		</div>
+</header><!-- sect-heading -->
+
+@foreach (var item in Model)
+{
+<article class="card card-product-list">
+	<div class="row no-gutters">
+		<aside class="col-md-3">
+			 <a href="@Url.Action( "Details", "Products", new {Id = item.Id})" class="img-wrap">
+				<span class="badge badge-danger"> NEW </span>
+				<img src="~/assets/images/product/@item.Image">
+			</a>
+		</aside> <!-- col.// -->
+		<div class="col-md-6">
+			<div class="info-main">
+				<a href="#" class="h5 title"> @Html.DisplayFor(model=> item.Name)</a>
+				<div class="rating-wrap mb-2">
+					<ul class="rating-stars">
+						<li style="width:100%" class="stars-active"> 
+							<i class="fa fa-star"></i> <i class="fa fa-star"></i> 
+							<i class="fa fa-star"></i> <i class="fa fa-star"></i> 
+							<i class="fa fa-star"></i> 
+						</li>
+						<li>
+							<i class="fa fa-star"></i> <i class="fa fa-star"></i> 
+							<i class="fa fa-star"></i> <i class="fa fa-star"></i> 
+							<i class="fa fa-star"></i> 
+						</li>
+					</ul>
+					<div class="label-rating">9/10</div>
+				</div> <!-- rating-wrap.// -->
+			
+				<p class="mb-3">
+					<span class="tag"> <i class="fa fa-check"></i> Bán chạy nhất</span> 
+					<span class="tag"> Hay nhất </span> 
+					<span class="tag"> 80 reviews </span>
+					<span class="tag"> Hữu ích </span>
+				</p>
+
+				<p>@Html.DisplayFor(model=> item.Description)</p>
+
+			</div> <!-- info-main.// -->
+		</div> <!-- col.// -->
+		<aside class="col-sm-3">
+			<div class="info-aside">
+				<div class="price-wrap">
+					<span class="h5 price">@item.Price.ToString("#,##0")</span> 
+					<small class="text-muted">/đ</small>
+				</div> <!-- price-wrap.// -->
+				<small class="text-warning">Sẵn sàng giao hàng</small>
+				
+				<p class="text-muted mt-3">Nhà sách Phương Nam</p>
+								
+				<p class="mt-5">
+					
+					<div class="input-group input-spinner">
+						@*<div class="input-group-prepend">
+							<button class="btn btn-outline-primary js-btn-plus" type="button"> &plus; </button>
+						</div>*@
+						<input type="number" step="1" min="1" class="carousel-inner text-center" value="1" id="quantity" aria-label="none" aria-describedby="button-addon1">
+						@*<div class="input-group-append">
+							<button class="btn btn-outline-primary js-btn-minus" type="button"> &minus; </button>
+						</div>*@
+					</div>
+				<button type="button" class="ajax-add-to-cart buy-now btn btn-outline-primary" data-id="@item.Id"> <i class="fa-solid fa-cart-shopping"></i> Thêm vào giỏ hàng </button>
+				</p>
+			</div> <!-- info-aside.// -->
+		</aside> <!-- col.// -->
+	</div> <!-- row.// -->
+</article> <!-- card-product .// -->
+}
+
+<nav class="mb-4" aria-label="Page navigation sample">
+  <ul class="pagination">
+	  @for (int i = 1; i <= Model.Count(); i++)
+{
+    <li class="page-item"><a class="page-link" href="#">@i</a></li>
+}
+    
+ 
+  </ul>
+</nav>
+
+</div>
+
+</div> <!-- container .//  -->
+</section>
+<!-- ========================= SECTION CONTENT END// ========================= -->
+
+
+<!-- ========================= SECTION SUBSCRIBE  ========================= -->
+<section class="padding-y-lg bg-light border-top">
+<div class="container">
+
+<p class="pb-2 text-center">Cung cấp các xu hướng sản phẩm mới nhất đến hộp thư đến của bạn</p>
+
+<div class="row justify-content-md-center">
+	<div class="col-lg-4 col-sm-6">
+<form class="form-row">
+		<div class="col-8">
+		<input class="form-control" placeholder="Email của bạn" type="email">
+		</div> <!-- col.// -->
+		<div class="col-4">
+		<button type="submit" class="btn btn-block btn-warning"> <i class="fa fa-envelope"></i> Đăng kí </button>
+		</div> <!-- col.// -->
+</form>
+<small class="form-text">Chúng tôi cam kết không chia sẻ thông tin của bạn qua bên thứ 3!! </small>
+	</div> <!-- col-md-6.// -->
+</div>
+	
+
+</div>
+</section>
+<!-- ========================= SECTION SUBSCRIBE END// ========================= -->
+@section scripts{
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+	<script>
+		$(document).ready(function () {
+			$(".ajax-add-to-cart").click(function () {
+				$.ajax({
+					url: "/Carts/AddToCart",
+					data: {
+						id: $(this).data("id"),
+						quantity: $("#quantity").val(),
+						type: "ajax"
+					},
+					success: function (data) {
+						console.log(data);
+						Swal.fire({
+							position: 'top-end',
+							icon: 'success',
+							title: 'Đã thêm vào giỏi hàng!',
+							showConfirmButton: false,
+							timer: 1500
+						})
+						$("#cart_count").html(data.quantity)
+					},
+					error: function () {
+						Swal.fire({
+							icon: 'error',
+							title: 'Chưa thêm vào giỏi hàng!',
+							text: 'Vui lòng đăng nhập',
+							showConfirmButton: false,
+							timer: 1500
+						})
+					}
+				});
+			});
+		})
+	</script>
+}

@@ -13,5 +13,6 @@ namespace Eshop.Areas.Admin.Controllers
             }
             return RedirectToAction("Login", "Register", new { area = "" });
         }
+
     }
 }
