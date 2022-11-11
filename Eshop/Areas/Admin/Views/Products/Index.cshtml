@@ -1,13 +1,12 @@
 ﻿@model IEnumerable<Eshop.Models.Product>
-
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Thông tin sản phẩm";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
-
-<h1>Thong tin san pham</h1>
+<h1>Thông tin sản phẩm </h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a href="~/Admin/Products/Create">Thêm sản phẩm mới</a>
 </p>
 <table class="table">
     <thead>
@@ -67,11 +66,12 @@
                 @Html.DisplayFor(modelItem => item.Status)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                @Html.ActionLink("Edit", "Edit", new { controller = "Products", id = item.Id })|
+                @Html.ActionLink("Details", "Details", new { controller = "Products", id = item.Id })|
+                @Html.ActionLink("Delete", "Delete", new { controller = "Products", id = item.Id })
             </td>
         </tr>
 }
     </tbody>
 </table>
+            
