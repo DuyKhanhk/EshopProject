@@ -29,6 +29,7 @@ namespace Eshop.Models
         public string ShippingAddress { get; set; }
 
         [DisplayName("SĐT giao hàng")]
+        [RegularExpression("0\\d{9}", ErrorMessage = "SĐT không hợp lệ")]
         public string ShippingPhone { get; set; }
 
         [DisplayName("Tổng tiền")]

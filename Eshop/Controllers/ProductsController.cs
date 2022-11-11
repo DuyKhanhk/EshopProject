@@ -35,7 +35,23 @@ namespace Eshop.Controllers
                 return NotFound();
             }
 
+            ViewBag.admin = HttpContext.Session.GetString("admin");
+            ViewBag.username = HttpContext.Session.GetString("username");
             return View(product);
+        }
+
+        public async Task<IActionResult> Search(string? key)
+        {
+            ViewBag.admin = HttpContext.Session.GetString("admin");
+            ViewBag.username = HttpContext.Session.GetString("username");
+           
+            if (key == null || _context.Products==null) { return RedirectToAction("Index","Home"); }
+            var lstProducts = await _context.Products.Include(p=> p.ProductType).Where(u => u.Name.Contains(key)).ToListAsync();
+            if (lstProducts.Count()!=0)
+            {
+            return View(lstProducts);
+            }
+                return RedirectToAction("NotFound_OK","Home");
         }
     }
 }

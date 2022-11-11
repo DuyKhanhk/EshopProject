@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -26,5 +27,6 @@ namespace Eshop.Models
         [Required(ErrorMessage = "{0} không được bỏ trống")]
         [DefaultValue(1)]
         public int Quantity { get; set; } = 1;
+
     }
 }

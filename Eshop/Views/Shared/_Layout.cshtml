@@ -39,19 +39,13 @@
 						</a> <!-- brand-wrap.// -->
 					</div>
 					<div class="col-xl-6 col-lg-5 col-md-6">
-						<form action="#" class="search-header">
+						<form action="Products/Search" class="search-header">
 							<div class="input-group w-100">
-								<select class="custom-select border-right" name="category_name">
-									<option value="">All type</option>
-									<option value="codex">Special</option>
-									<option value="comments">Only best</option>
-									<option value="content">Latest</option>
-								</select>
-								<input type="text" class="form-control" placeholder="Search">
+								<input type="text" name="key" class="form-control" placeholder="Tìm kiếm">
 
 								<div class="input-group-append">
-									<button class="btn btn-primary" type="submit">
-										<i class="fa fa-search"></i> Search
+									<button class="btn btn-primary" type="submit"> 
+										<i class="fa fa-search"></i> Tìm kiếm
 									</button>
 								</div>
 							</div>
@@ -63,13 +57,11 @@
 							<div class="widget-header">
 								<ul>
 									@{
-										string myProfile = "Đăng nhập";
-										string path = "~/Register/Login";
+										string myProfile = "Xin chào!";
 									}
 									@if (ViewBag.admin == "Admin")
 									{
 										myProfile = ViewBag.admin;
-										<li><a href="~/Admin/Home/"> Trang Admin</a></li>
 										<li><a href="@Url.Action("Logout", "Register")"> Đăng xuất</a></li>
 									}
 									else if (ViewBag.username != null)
@@ -85,21 +77,69 @@
 								</ul>
 							</div>
 							<div class="widget-header mr-3">
-								<a href="@Url.Action("Login", "Register")" class="widget-view">
-									<div class="ic icon-area">
-										<i class="fa fa-user"></i>
-										<span class="notify">3</span>
-									</div>
-									<small class="text">@myProfile</small>
-								</a>
+								@if (ViewBag.admin == "Admin")
+								{
+									<a href="@Url.Action("Details", "Register")" asp-for="Username" class="widget-view">
+										<div class="ic icon-area">
+											<i class="fa fa-user"></i>
+											
+										</div>
+										<small class="text">@myProfile</small>
+									</a>
+								}
+								else if (ViewBag.username != null)
+								{
+									<a href="@Url.Action("Details", "Register")" asp-for="Username" class="widget-view">
+										<div class="ic icon-area">
+											<i class="fa fa-user"></i>
+											
+										</div>
+										<small class="text">@myProfile</small>
+									</a>
+								}
+								else
+								{
+									<a href="@Url.Action("Login", "Register")"  class="widget-view">
+										<div class="ic icon-area">
+											<i class="fa fa-user"></i>
+											@*<span class="notify">3</span>*@
+										</div>
+										<small class="text">@myProfile</small>
+									</a>
+								}
 							</div>
 							<div class="widget-header">
-								<a href="#" class="widget-view">
-									<div class="icon-area">
-										<i class="fa fa-shopping-cart"></i>
-									</div>
-									<small class="text"> Cart </small>
-								</a>
+								@if (ViewBag.username != null)
+								{
+									<a href="@Url.Action("Index","Carts")" class="widget-view">
+										<div class="icon-area">
+											<i class="fa fa-shopping-cart"></i>
+											<span class="notify">
+												@using Eshop.Helpers
+												@{
+													var data = Context.Session.Get<List<Cart>>("GioHang");
+													if (data == null)
+													{
+														data = new List<Cart>();
+													}
+													
+												}
+												@data.Sum(c=>c.Quantity)
+												
+											</span>
+										</div>
+										<small class="text"> Cart </small>
+									</a>
+								}
+								else
+								{
+									<a href="@Url.Action("Login", "Register")" class="widget-view">
+										<div class="icon-area">
+											<i class="fa fa-shopping-cart"></i>
+										</div>
+										<small class="text"> Cart </small>
+									</a>
+								}
 							</div>
 						</div> <!-- widgets-wrap.// -->
 					</div> <!-- col.// -->
@@ -119,56 +159,37 @@
 				<div class="collapse navbar-collapse" id="main_nav">
 					<ul class="navbar-nav">
 						<li class="nav-item dropdown">
-							<a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"> <i class="fa fa-bars text-muted mr-2"></i> Categories </a>
+							<a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"> <i class="fa fa-bars text-muted mr-2"></i> Danh mục sách </a>
 							<div class="dropdown-menu">
-								<a class="dropdown-item" href="#">Machinery</a>
-								<a class="dropdown-item" href="#">Electronics</a>
-								<a class="dropdown-item" href="#">Home textile</a>
-								<a class="dropdown-item" href="#">Home and kitchen</a>
-								<a class="dropdown-item" href="#">Service and equipment</a>
-								<a class="dropdown-item" href="#">Healthcare items</a>
-								<a class="dropdown-item" href="#">Toys and Hobbies</a>
+									<a class="dropdown-item" >Sách giáo khoa</a>
+									<a class="dropdown-item" >Sách tham khảo</a>
+									<a class="dropdown-item" >Sách nước ngoài</a>
+									<a class="dropdown-item" >Báo & Tạp chí</a>
+									<a class="dropdown-item" >Tiểu thuyết & Tự truyện</a>
+									<a class="dropdown-item" >Khác</a>
 							</div>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="#">Ready to ship</a>
+							<a class="nav-link" href="@Url.Action( "ProductswithProductType","ProductTypes")">Sản phẩm</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="#">Trade shows</a>
+							<a class="nav-link" href="#">Tác giả</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="#">Services</a>
+							<a class="nav-link" href="#">Review sách</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="#">Sell with us</a>
-						</li>
-						<li class="nav-item dropdown">
-							<a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">Demo pages</a>
-							<div class="dropdown-menu">
-								<a class="dropdown-item" href="page-index.html">Main</a>
-								<a class="dropdown-item" href="page-category.html">All category</a>
-								<a class="dropdown-item" href="page-listing-large.html">Listing list</a>
-								<a class="dropdown-item" href="page-listing-grid.html">Listing grid</a>
-								<a class="dropdown-item" href="page-shopping-cart.html">Shopping cart</a>
-								<a class="dropdown-item" href="page-detail-product.html">Item detail</a>
-								<a class="dropdown-item" href="page-content.html">Info content</a>
-								<a class="dropdown-item" href="page-user-login.html">Page login</a>
-								<a class="dropdown-item" href="page-user-register.html">Page register</a>
-								<a class="dropdown-item disabled text-muted" href="#">More components</a>
-							</div>
+							<a class="nav-link" href="#">On Sale</a>
 						</li>
 					</ul>
 					<ul class="navbar-nav ml-md-auto">
 						<li class="nav-item">
-							<a class="nav-link" href="#">Get the app</a>
+							<a class="nav-link" href="#">Thông báo</a>
 						</li>
 						<li class="nav-item dropdown">
-							<a class="nav-link dropdown-toggle" href="http://example.com" data-toggle="dropdown">English</a>
+							<a class="nav-link dropdown-toggle" href="http://example.com" data-toggle="dropdown">Tiếng Việt</a>
 							<div class="dropdown-menu dropdown-menu-right">
-								<a class="dropdown-item" href="#">Russian</a>
-								<a class="dropdown-item" href="#">French</a>
-								<a class="dropdown-item" href="#">Spanish</a>
-								<a class="dropdown-item" href="#">Chinese</a>
+								<a class="dropdown-item" href="#">English</a>
 							</div>
 						</li>
 					</ul>
@@ -233,7 +254,7 @@
 		</div><!-- //container -->
 	</footer>
 	<!-- ========================= FOOTER END // ========================= -->
-	@RenderSection("Scripts", required: false)
+	@RenderSection("scripts", required: false)
 
 </body>
 </html>

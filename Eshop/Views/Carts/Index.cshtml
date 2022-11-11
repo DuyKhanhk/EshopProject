@@ -1,0 +1,114 @@
+﻿@model IEnumerable<Eshop.Models.Cart>
+@{
+	ViewData["Title"] = "Index";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+	int total = 0;
+}
+@if(Model==null){
+	<h3>Không tìm thấy giỏ hàng của @ViewBag.username!!</h3>
+}else{
+<!-- ========================= SECTION CONTENT ========================= -->
+<section class="section-content padding-y">
+	<div class="container">
+
+		<div class="row">
+			<main class="col-md-9">
+				<div class="card">
+
+					<table class="table table-borderless table-shopping-cart">
+						<thead class="text-muted">
+							<tr class="small text-uppercase">
+								<th scope="col">Sách</th>
+								<th scope="col" width="120">Số lượng</th>
+								<th scope="col" width="120">Giá</th>
+								<th scope="col" class="text-right" width="200"> </th>
+							</tr>
+						</thead>
+						<tbody>
+							@foreach (var item in Model)
+							{
+							<tr>
+								<td>
+									<figure class="itemside">
+										<div class="aside"><img src="~/assets/images/product/@item.Product.Image" class="img-sm"></div>
+										<figcaption class="info">
+											<a href="#" class="title text-dark">@item.Product.Name </a>
+											<p class="small text-muted">@item.Product.Description</p>
+										</figcaption>
+									</figure>
+								</td>
+								<td>
+									<label class="form-control text-center">
+										<option>@item.Quantity</option>
+										
+									</label>
+								</td>
+										@{
+											int onebook = item.Quantity * item.Product.Price;
+											total += onebook;
+										}
+								<td>
+									<div class="price-wrap">
+										<var class="price">@onebook.ToString("#,##0") đ</var>
+												<small class="text-muted"> @item.Product.Price.ToString("#,##0") đ</small>
+									</div> <!-- price-wrap .// -->
+								</td>
+								<td class="text-right">
+									<a data-original-title="Save to Wishlist" title="" href="" class="btn btn-light" data-toggle="tooltip"> <i class="fa fa-heart"></i></a>
+									<a asp-action="Remove" asp-route-id="@item.ProductId" class="btn btn-light btn-round"> Xóa</a>
+								</td>
+							</tr>
+							}
+						</tbody>
+					</table>
+					@{
+									total += 18000;
+					}
+					<div class="card-body border-top">
+							@if (@Model.Count() > 0)
+							{
+								<a asp-action="Payment" asp-controller="Payments" asp-route-Total="@total" class="btn btn-primary float-md-right"> Thanh toán <i class="fa fa-chevron-right"></i> </a>
+								<a asp-action="Remove" class="btn btn-light btn-round float-md-right" > Xóa tất cả</a>
+							}
+						<a href="@Url.Action("Index","Home")" class="btn btn-light"> <i class="fa fa-chevron-left"></i> Tiếp tục mua hàng </a>
+					</div>
+				</div> <!-- card.// -->
+
+				<div class="alert alert-success mt-3">
+					<p class="icontext"><i class="icon text-success fa fa-truck"></i> Phí ship không đồng, nhanh tay deal hồng nào!!!!</p>
+				</div>
+
+			</main> <!-- col.// -->
+				@if (Model.Count() > 0)
+				{
+					<aside class="col-md-3">
+						<div class="card">
+							<div class="card-body">
+								<dl class="dlist-align">
+									<dt>Tổng tiền sách:</dt>
+									<dd class="text-right">@total.ToString("#,##0") đ</dd>
+								</dl>
+								<dl class="dlist-align">
+									<dt>Phí vận chuyển</dt>
+									<dd class="text-right">18,000 đ</dd>
+								</dl>
+								
+								<dl class="dlist-align">
+									<dt>Tổng thanh toán:</dt>
+									<dd class="text-right  h5"><strong>@total.ToString("#,##0") đ</strong></dd>
+								</dl>
+								<hr>
+								<p class="text-center mb-3">
+									<img src="~/assets/images/misc/payments.png" height="26">
+								</p>
+
+							</div> <!-- card-body.// -->
+						</div>  <!-- card .// -->
+					</aside> <!-- col.// -->
+				}
+			</div>
+
+	</div> <!-- container .//  -->
+</section>
+<!-- ========================= SECTION CONTENT END// ========================= -->
+}

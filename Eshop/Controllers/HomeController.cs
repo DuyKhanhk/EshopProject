@@ -16,13 +16,13 @@ namespace Eshop.Controllers
         }
 
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             ViewBag.admin = HttpContext.Session.GetString("admin");
             ViewBag.username = HttpContext.Session.GetString("username");
             HomeModel home = new HomeModel();
-            home.ListProducts = _context.Products.Include(p => p.ProductType).ToList();
-            home.ListProductTypes = _context.ProductTypes.ToList();
+            home.ListProducts =await _context.Products.Include(p => p.ProductType).ToListAsync();
+            home.ListProductTypes =await _context.ProductTypes.ToListAsync();
             return View(home);
         }
 
@@ -35,6 +35,11 @@ namespace Eshop.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        public IActionResult NotFound_OK()
+        {
+            return View();
         }
     }
 }
