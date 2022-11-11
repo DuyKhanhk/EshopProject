@@ -21,9 +21,13 @@ namespace Eshop.Controllers
             ViewBag.admin = HttpContext.Session.GetString("admin");
             ViewBag.username = HttpContext.Session.GetString("username");
             HomeModel home = new HomeModel();
-            home.ListProducts =await _context.Products.Include(p => p.ProductType).ToListAsync();
+            home.ListProducts = await _context.Products.Include(p => p.ProductType).Where(q => q.Stock > 0).ToListAsync();
             home.ListProductTypes =await _context.ProductTypes.ToListAsync();
-            return View(home);
+
+            if (home.ListProducts.Any())
+                return View(home);
+
+            return RedirectToAction("NotFound_OK");
         }
 
         public IActionResult Privacy()

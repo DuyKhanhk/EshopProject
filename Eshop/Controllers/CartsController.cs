@@ -62,7 +62,11 @@ namespace Eshop.Controllers
 			else
 			{
 				item.Quantity += quantity;
-			}
+                if (item.Quantity > item.Product.Stock)
+                {
+                    item.Quantity = item.Product.Stock;
+                }
+            }
 			HttpContext.Session.Set("GioHang", myCart);
 
 			if (type == "ajax")

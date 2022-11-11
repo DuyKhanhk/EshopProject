@@ -38,11 +38,20 @@
 									</figure>
 								</td>
 								<td>
-									<label class="form-control text-center">
-										<option>@item.Quantity</option>
-										
-									</label>
-								</td>
+											@if (@item.Quantity == @item.Product.Stock)
+											{
+												<label class="form-control text-center">
+													<option>@item.Product.Stock</option>
+												</label>
+												<small> Bạn đã thêm tất cả sách trong kho</small>
+											}
+											else
+											{
+												<label class="form-control text-center">
+													<option>@item.Quantity</option>
+												</label>
+											}
+										</td>
 										@{
 											int onebook = item.Quantity * item.Product.Price;
 											total += onebook;
@@ -62,7 +71,8 @@
 						</tbody>
 					</table>
 					@{
-									total += 18000;
+						int  tts=total;
+							total += 18000;
 					}
 					<div class="card-body border-top">
 							@if (@Model.Count() > 0)
@@ -86,7 +96,7 @@
 							<div class="card-body">
 								<dl class="dlist-align">
 									<dt>Tổng tiền sách:</dt>
-									<dd class="text-right">@total.ToString("#,##0") đ</dd>
+									<dd class="text-right">@tts.ToString("#,##0") đ</dd>
 								</dl>
 								<dl class="dlist-align">
 									<dt>Phí vận chuyển</dt>

@@ -34,10 +34,12 @@ namespace Eshop.Models
         public string Email { get; set; }
 
         [DisplayName("SĐT")]
+        [Required(ErrorMessage = "{0} không được bỏ trống")]
         [RegularExpression("0\\d{9}", ErrorMessage = "SĐT không hợp lệ")]
         public string Phone { get; set; }
 
         [DisplayName("Địa chỉ")]
+        [Required(ErrorMessage = "{0} không được bỏ trống")]
         public string Address { get; set; }
 
         [DisplayName("Họ tên")]

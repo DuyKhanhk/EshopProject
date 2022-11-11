@@ -21,28 +21,35 @@ namespace Eshop.Controllers
             _context = context;
         }
 
-        
+
         // GET: Payments
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            ViewBag.username = HttpContext.Session.GetString("username");
-            var eshopContext = _context.Invoices.Include(i => i.Account).OrderByDescending(i=>i.IssuedDate);
-            return View(await eshopContext.ToListAsync());
+            var name = HttpContext.Session.GetString("username");
+            ViewBag.username = name;
+            var acountid = _context.Accounts.SingleOrDefault(i => i.Username == name);
+            var eshopContext = _context.Invoices.Where(i => i.AccountId == acountid.Id).OrderByDescending(i => i.IssuedDate);
+
+            if (eshopContext == null)
+            {
+                return RedirectToAction("NotFound_OK", "Home");
+            }
+            return View(eshopContext.ToList());
         }
 
         public async Task<IActionResult> InvoiceDetails(int? id)
         {
             ViewBag.username = HttpContext.Session.GetString("username");
-            var invDetails=_context.InvoiceDetails.Include(i=> i.Invoice)
-                                                   .Include(i=>i.Product)
+            var invDetails = _context.InvoiceDetails.Include(i => i.Invoice)
+                                                   .Include(i => i.Product)
                                                    .Where(i => i.InvoiceId == id);
             return View(await invDetails.ToListAsync());
         }
-        
+
         // GET: Payments/Create
         public IActionResult Payment(int Total)
         {
-            var name= HttpContext.Session.GetString("username");
+            var name = HttpContext.Session.GetString("username");
             Random rnd = new Random();
             int num;
             string num2;
@@ -51,10 +58,11 @@ namespace Eshop.Controllers
                 num = rnd.Next();
                 num2 = num.ToString();
             } while (_context.Invoices.SingleOrDefault(i => i.Code == num2) != null);
-            var account=_context.Accounts.SingleOrDefault(i=> i.Username==name);
+            var account = _context.Accounts.SingleOrDefault(i => i.Username == name);
 
+            ViewBag.username = name;
             ViewBag.total = Total;
-            ViewBag.phone=account.Phone;
+            ViewBag.phone = account.Phone;
             ViewBag.address = account.Address;
             ViewBag.number = num;
             return View();
@@ -65,28 +73,29 @@ namespace Eshop.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Payment(int Code,string ShippingAddress, string ShippingPhone, int Total)
+        public async Task<IActionResult> Payment([Bind("Code,ShippingAddress,ShippingPhone,Total")] Invoice invoices)
         {
-            var name= HttpContext.Session.GetString("username");
+            var name = HttpContext.Session.GetString("username");
+            var account = _context.Accounts.SingleOrDefault(i => i.Username == name);
             if (ModelState.IsValid)
             {
                 DateTime date = DateTime.Now;
-                var account = _context.Accounts.SingleOrDefault(i => i.Username == name);
+
                 Invoice invoice = new Invoice()
                 {
-                    Code = Code.ToString(),
+                    Code = invoices.Code.ToString(),
                     AccountId = account.Id,
                     IssuedDate = date,
-                    ShippingAddress = ShippingAddress,
-                    ShippingPhone = ShippingPhone,
-                    Total = Total,
+                    ShippingAddress = invoices.ShippingAddress,
+                    ShippingPhone = invoices.ShippingPhone,
+                    Total = invoices.Total,
                     Status = true
 
                 };
                 _context.Add(invoice);
                 await _context.SaveChangesAsync();
 
-                var inv = _context.Invoices.SingleOrDefault(u => u.Code == Code.ToString());//Lấy ra invoice vừa mới tạo
+                var inv = _context.Invoices.SingleOrDefault(u => u.Code == invoices.Code.ToString());//Lấy ra invoice vừa mới tạo
 
                 var lstInvDetails = HttpContext.Session.Get<List<Cart>>("GioHang");
                 List<InvoiceDetail> invoiceDetails = new List<InvoiceDetail>();
@@ -94,19 +103,48 @@ namespace Eshop.Controllers
                 {
                     InvoiceDetail invoiceDetail = new InvoiceDetail()
                     {
-                        InvoiceId=inv.Id,
-                        ProductId=item.ProductId,
-                        Quantity=item.Quantity,
-                        UnitPrice=item.Quantity*item.Product.Price
+                        InvoiceId = inv.Id,
+                        ProductId = item.ProductId,
+                        Quantity = item.Quantity,
+                        UnitPrice = item.Quantity * item.Product.Price
                     };
+
+                    var productStock = _context.Products.SingleOrDefault(i => i.Id == item.ProductId);
+                    productStock.Stock -= item.Quantity;
+
+                    _context.Products.Update(productStock);
+                    await _context.SaveChangesAsync();
+
+
                     invoiceDetails.Add(invoiceDetail);
                 }
+
                 _context.InvoiceDetails.AddRange(invoiceDetails);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
+
+                HttpContext.Session.Remove("GioHang");
+
+                ViewBag.username = name;
                 return RedirectToAction(nameof(Index));
             }
 
-            return RedirectToAction("Index","Home");
+
+            Random rnd = new Random();
+            int num;
+            string num2;
+            do
+            {
+                num = rnd.Next();
+                num2 = num.ToString();
+            } while (_context.Invoices.SingleOrDefault(i => i.Code == num2) != null);
+
+            ViewBag.total = invoices.Total;
+            ViewBag.number = num;
+            ViewBag.username = name;
+
+            ViewBag.ErrorMsg = "Thanh toán thất bại";
+
+            return View();
         }
 
     }
