@@ -1,0 +1,42 @@
+﻿@model IEnumerable<Eshop.Models.ProductType>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Index</h1>
+
+<p>
+     <a href="~/Admin/ProductTypes/Create">Thêm loại sản phẩm mới</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Status)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Status)
+            </td>
+            <td>
+                    @Html.ActionLink("Edit", "Edit", new { controller = "ProductTypes", id = item.Id })|
+                    @Html.ActionLink("Details", "Details", new { controller = "ProductTypes", id = item.Id })|
+                    @Html.ActionLink("Delete", "Delete", new { controller = "ProductTypes", id = item.Id })|
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
