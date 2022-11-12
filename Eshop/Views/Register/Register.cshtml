@@ -11,7 +11,8 @@
 	<div class="card mx-auto" style="max-width:520px; margin-top:40px;">
       <article class="card-body">
 		<header class="mb-4"><h4 class="card-title">Sign up</h4></header>
-            @using (Html.BeginForm("Register","Register",FormMethod.Post)){
+            @using (Html.BeginForm("Register", "Register", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
                 <div class="form-group">
                     @Html.LabelFor(temp => temp.Username)
                     @Html.TextBoxFor(temp => temp.Username, new { placeholder = "Username", @class="form-control"})
@@ -50,9 +51,9 @@
                     @Html.ValidationMessageFor(temp => temp.Address)
                 </div>
                 <div class="form-group">
-                    @Html.LabelFor(temp => temp.Avatar)
-                    @Html.TextBoxFor(temp => temp.Avatar, new { placeholder = "Avatar", @class="form-control"})
-                    @Html.ValidationMessageFor(temp => temp.Avatar)
+                    @Html.LabelFor(temp => temp.ImageFile)
+                    @Html.EditorFor(temp => temp.ImageFile, new { placeholder = "ImageFile", @class="form-control", @type="file"})
+                    @Html.ValidationMessageFor(temp => temp.ImageFile)
                 </div>
                 <button type="submit" class="btn btn-primary btn-block"> Đăng kí</button>
                 <p class="text-danger">@ViewBag.ErrorMsg</p>

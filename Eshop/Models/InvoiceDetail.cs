@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -21,6 +22,10 @@ namespace Eshop.Models
         // Navigation reference property cho khóa ngoại đến Product
         [DisplayName("Sản phẩm")]
         public Product Product { get; set; }
+
+        [NotMapped]
+        public string ProductName { get; set; }
+
 
         [DisplayName("Số lượng")]
         [DefaultValue(1)]

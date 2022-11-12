@@ -4,7 +4,10 @@
     ViewData["Title"] = "Details";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
-
+<div class="content-wrapper">
+    <section class="content">
+        <div class="container-fluid">
+            <div class="card-body">
 <h1>Thông tin sản phẩm </h1>
 
 <div>
@@ -63,4 +66,8 @@
 <div>
     @Html.ActionLink("Edit", "Edit", new { controller = "Products", id = @Model.Id })|
     @Html.ActionLink("Về trang chủ", "Index")
+</div>
+            </div>
+        </div>
+    </section>
 </div>
