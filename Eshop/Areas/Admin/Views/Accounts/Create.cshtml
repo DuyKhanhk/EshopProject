@@ -4,7 +4,10 @@
     ViewData["Title"] = "Create";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
-
+<div class="content-wrapper">
+    <section class="content">
+        <div class="container-fluid">
+            <div class="card-body">
 <h1>Thêm tài khoản</h1>
 
 @using (Html.BeginForm())
@@ -92,3 +95,7 @@
     @Html.ActionLink("Về trang chủ", "Index")
 </div>
 
+            </div>
+        </div>
+    </section>
+</div>

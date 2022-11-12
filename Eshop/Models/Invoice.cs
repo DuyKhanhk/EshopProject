@@ -21,6 +21,9 @@ namespace Eshop.Models
         [DisplayName("Khách hàng")]
         public Account Account { get; set; }
 
+        [NotMapped]
+        public string Name { get; set; }
+
         [DisplayName("Ngày lập")]
         [DataType(DataType.DateTime)]
         public DateTime IssuedDate { get; set; } = DateTime.Now;

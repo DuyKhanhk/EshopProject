@@ -25,7 +25,7 @@ namespace Eshop.Models
         [NotMapped]
         [Display(Name = "Xác nhận mật khẩu")]
         [DataType(DataType.Password)]
-        //[Required(ErrorMessage = "Xác nhận mật khẩu")]
+        [Required(ErrorMessage = "Xác nhận mật khẩu")]
         [Compare("Password", ErrorMessage = "Mật khẩu và mật khẩu xác nhận không khớp.")]
         public string ConfirmPassword { get; set; }
 
@@ -51,6 +51,10 @@ namespace Eshop.Models
 
         [DisplayName("Ảnh đại diện")]
         public string Avatar { get; set; }
+
+        [NotMapped]
+        [DisplayName("Ảnh đại diện")]
+        public IFormFile ImageFile { get; set; }
 
         [DisplayName("Còn hoạt động")]
         [DefaultValue(true)]

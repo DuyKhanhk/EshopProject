@@ -1,0 +1,45 @@
+﻿@model IEnumerable<Eshop.Models.Invoice>
+@{
+    ViewData["Title"] = "Sales";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="content-wrapper">
+    <section class="content">
+        <div class="container-fluid">
+            <div class="card-body">
+                <h1 class="text-center font-weight-bolder">Thống Kê Doanh Số</h1>
+                <a href="@Url.Action("Sales","Statisticals",new{area="Admin",today=0})" class="btn btn-secondary">theo ngày</a>
+                <a href="@Url.Action("Sales","Statisticals",new{area="Admin",today=1})" class="btn btn-secondary">theo tháng</a>
+                <a href="@Url.Action("Sales","Statisticals",new{area="Admin",today=2})" class="btn btn-secondary">theo năm</a>
+                
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>
+                                Thời gian
+                            </th>
+                            <th>
+                                Doanh Số
+                            </th>
+                            
+                        </tr>
+                    </thead>
+                    <tbody>
+                @foreach (var item in Model) {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Id)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Total)
+                            </td>
+                            
+                        </tr>
+                }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</div>

@@ -1,0 +1,45 @@
+﻿@model IEnumerable<Eshop.Models.Invoice>
+
+@{
+    ViewData["Title"] = "SpendMoney";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="content-wrapper">
+    <section class="content">
+        <div class="container-fluid">
+            <div class="card-body">
+<h1 class="text-center">Tiền Mua Hàng Của Khách</h1>
+
+
+<table class="table">
+    <thead>
+        <tr>
+           
+            <th>
+                @Html.DisplayNameFor(model => model.Account)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Total)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Total)
+            </td>
+            
+        </tr>
+}
+    </tbody>
+</table>
+            </div>
+        </div>
+    </section>
+</div>

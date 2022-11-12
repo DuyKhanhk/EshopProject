@@ -2,6 +2,7 @@
 using Eshop.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 using System;
 using System.Security.Cryptography;
 using System.Security.Principal;
@@ -13,9 +14,12 @@ namespace Eshop.Controllers
     {
         private readonly EshopContext _context;
 
-        public RegisterController(EshopContext context)
+        private readonly IWebHostEnvironment _environmemt;
+
+        public RegisterController(EshopContext context, IWebHostEnvironment environment)
         {
             _context = context;
+            _environmemt = environment;
         }
         [HttpGet]
         public IActionResult Register()
@@ -25,7 +29,7 @@ namespace Eshop.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Register(Account _account)
+        public async Task<IActionResult> Register([Bind("Id, Username, Password, ConfirmPassword, Email, Phone, Address, FullName, IsAdmin, Avatar, ImageFile, Status")] Account _account)
         {
             if (ModelState.IsValid)
             {
@@ -44,10 +48,29 @@ namespace Eshop.Controllers
                         FullName = _account.FullName,
                         IsAdmin = false,
                         Avatar = "customer.jpg",
+                        ImageFile = _account.ImageFile,
                         Status = _account.Status,
                     };
                     _context.Accounts.Add(user);
                     await _context.SaveChangesAsync();
+
+                    var imgAvtar = _context.Accounts.SingleOrDefault(i => i.Username == user.Username);
+                    if (user.ImageFile != null)
+                    {
+                        var fileName = user.Username.ToString() + Path.GetExtension(user.ImageFile.FileName);
+                        var uploadFolder = Path.Combine(_environmemt.WebRootPath, "images", "avatar");
+                        var uploadPath = Path.Combine(uploadFolder, fileName);
+
+                        using (FileStream fs = System.IO.File.Create(uploadPath))
+                        {
+                            user.ImageFile.CopyTo(fs);
+                            fs.Flush();
+                        }
+                        user.Avatar = fileName;
+                        _context.Accounts.Update(user);
+                        _context.SaveChanges();
+                    }
+
                     return RedirectToAction("Login");
                 }
                 else

@@ -1,0 +1,48 @@
+﻿@model IEnumerable<Eshop.Models.InvoiceDetail>
+
+@{
+    ViewData["Title"] = "TopProduct";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="content-wrapper">
+    <section class="content">
+        <div class="container-fluid">
+            <div class="card-body">
+                <h1 class="text-center">Top @ViewBag.Top Sách Bán Chạy Nhất</h1>
+
+                <a href="@Url.Action("TopProduct","Statisticals",new{area="Admin",top=5})" class="btn btn-secondary">Top 5</a>
+                <a href="@Url.Action("TopProduct","Statisticals",new{area="Admin",top=10})" class="btn btn-secondary">Top 10</a>
+                <a href="@Url.Action("TopProduct","Statisticals",new{area="Admin",top=15})" class="btn btn-secondary">Top 15</a>
+                <a href="@Url.Action("TopProduct","Statisticals",new{area="Admin",top=25})" class="btn btn-secondary">Top 25</a>
+
+               
+                <table class="table table-active">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Product.Name)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Quantity)
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                @foreach (var item in Model) {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ProductName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Quantity)
+                            </td>
+                        </tr>
+                }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</div>

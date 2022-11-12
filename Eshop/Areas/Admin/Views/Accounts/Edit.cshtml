@@ -5,6 +5,10 @@
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
 
+<div class="content-wrapper">
+    <section class="content">
+        <div class="container-fluid">
+            <div class="card-body">
 <h1>Sửa thông tin tài khoản</h1>
 
 @using (Html.BeginForm())
@@ -90,4 +94,9 @@
 
 <div>
     @Html.ActionLink("Về trang chủ", "Index")
+</div>
+
+            </div>
+        </div>
+    </section>
 </div>

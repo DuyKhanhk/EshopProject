@@ -5,6 +5,10 @@
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
 
+<div class="content-wrapper">
+    <section class="content">
+        <div class="container-fluid">
+            <div class="card-body">
 <h1>Thông tin tài khoản</h1>
 
 <div>
@@ -70,4 +74,8 @@
 <div>
     @Html.ActionLink("Edit", "Edit", new { controller = "Accounts", id = @Model.Id }) |
     @Html.ActionLink("Về trang chủ", "Index")
+</div>
+            </div>
+        </div>
+    </section>
 </div>

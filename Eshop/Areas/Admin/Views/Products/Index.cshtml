@@ -3,12 +3,18 @@
     ViewData["Title"] = "Thông tin sản phẩm";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
-<h1>Thông tin sản phẩm </h1>
 
-<p>
-    <a href="~/Admin/Products/Create">Thêm sản phẩm mới</a>
-</p>
-<table class="table">
+<div class="content-wrapper">
+ <section class="content">
+      <div class="container-fluid">
+        <div class="card-body">
+                    <h1 class="text-center font-monospace">Thông tin sản phẩm </h1>
+
+                    <p>
+                        <a href="~/Admin/Products/Create">Thêm sản phẩm mới</a>
+                    </p>
+            <table class="table card-body">
+                    
     <thead>
         <tr>
             <th>
@@ -74,4 +80,7 @@
 }
     </tbody>
 </table>
-            
+        </div>
+       </div>
+  </section>
+</div>
