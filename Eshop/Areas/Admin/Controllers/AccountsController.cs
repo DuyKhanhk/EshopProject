@@ -2,9 +2,12 @@
 using Eshop.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc.Rendering;
+
 
 namespace Eshop.Areas.Admin.Controllers
 {
+    [Area("Admin")]
     public class AccountsController : Controller
     {
         private readonly EshopContext _context;
@@ -15,13 +18,11 @@ namespace Eshop.Areas.Admin.Controllers
             _context = context;
             _environment = environment;
         }
-        [Area("Admin")]
         public async Task<IActionResult> Index()
         {
             ViewBag.Username = HttpContext.Request.Cookies["username"];
             return View(await _context.Accounts.ToListAsync());
         }
-        [Area("Admin")]
         public async Task<IActionResult> Details(int? id)
         {
             HttpContext.Session.Clear();
@@ -39,25 +40,35 @@ namespace Eshop.Areas.Admin.Controllers
 
             return View(account);
         }
-        [Area("Admin")]
         public IActionResult Create()
         {
             return View();
         }
-        [Area("Admin")]
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Username,Password,Email,Phone,Address,FullName,IsAdmin,Avatar,Status")] Account account)
+        public async Task<IActionResult> Create([Bind("Id,Username,Password,ConfirmPassword,Email,Phone,Address,FullName,IsAdmin,Avatar,Status")] Account account)
         {
             if (ModelState.IsValid)
             {
                 _context.Add(account);
                 await _context.SaveChangesAsync();
+                if (account.ImageFile != null)
+                {
+                    var fileName = account.Id.ToString() + Path.GetExtension(account.ImageFile.FileName);
+                    var uploadFolder = Path.Combine(_environment.WebRootPath, "images", "account");
+                    var uploadPath = Path.Combine(uploadFolder, fileName);
+                    using (FileStream fs = System.IO.File.Create(uploadPath))
+                    {
+                        account.ImageFile.CopyTo(fs);
+                        fs.Flush();
+                    }
+                    account.Avatar = fileName;
+                    _context.Accounts.Update(account);
+                    _context.SaveChanges();
+                }
                 return RedirectToAction(nameof(Index));
             }
             return View(account);
         }
-        [Area("Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Accounts == null)
@@ -85,6 +96,15 @@ namespace Eshop.Areas.Admin.Controllers
             {
                 try
                 {
+                    var file = Path.GetFileName(account.ImageFile.FileName);
+                    var uploadFolder = Path.Combine(_environment.WebRootPath, "img", "product");
+                    var path = Path.Combine(uploadFolder, file);
+                    using (FileStream fs = System.IO.File.Create(path))
+                    {
+                        account.ImageFile.CopyTo(fs);
+                        fs.Flush();
+                    }
+                    account.Avatar = file;
                     _context.Update(account);
                     await _context.SaveChangesAsync();
                 }
@@ -103,7 +123,6 @@ namespace Eshop.Areas.Admin.Controllers
             }
             return View(account);
         }
-        [Area("Admin")]
         public IActionResult Delete(int? id)
         {
             if (id == null)

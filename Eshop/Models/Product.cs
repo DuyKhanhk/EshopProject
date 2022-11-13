@@ -22,11 +22,11 @@ namespace Eshop.Models
         [DisplayName("Mô tả")]
         public string Description { get; set; }
 
+        [Range(0, 999, ErrorMessage = "Không âm")]
         [DisplayName("Giá (VNĐ)")]
-        [DisplayFormat(DataFormatString = "{0:n0}")]
         [DefaultValue(0)]
         public int Price { get; set; } = 0;
-
+        [Range(0,999,ErrorMessage ="Không âm")]
         [DisplayName("Tồn kho")]
         [DefaultValue(0)]
         public int Stock { get; set; } = 0;

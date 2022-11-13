@@ -2,9 +2,7 @@
 using Eshop.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Mvc.TagHelpers;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualBasic;
 
 namespace Eshop.Areas.Admin.Controllers
 {
@@ -58,6 +56,7 @@ namespace Eshop.Areas.Admin.Controllers
        
         public IActionResult Create()
         {
+            
             ViewData["ProductTypeId"] = new SelectList(_context.ProductTypes, "Id", "Name");
             return View();
         }
@@ -118,15 +117,6 @@ namespace Eshop.Areas.Admin.Controllers
             {
                 try
                 {
-                    var filename = product.Id.ToString() + Path.GetExtension(product.ImageFile.FileName);
-                    var uploadFolder = Path.Combine(_environment.WebRootPath, "img", "product");
-                    var uploadPath = Path.Combine(uploadFolder, filename);
-                    using(FileStream fs = System.IO.File.Create(uploadPath))
-                    {
-                        product.ImageFile.CopyTo(fs);
-                        fs.Flush();
-                    }
-                    product.Image = filename;
                     _context.Update(product);
                     await _context.SaveChangesAsync();
                 }
