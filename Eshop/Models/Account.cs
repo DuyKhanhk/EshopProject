@@ -53,6 +53,7 @@ namespace Eshop.Models
         public string Avatar { get; set; }
 
         [NotMapped]
+        [DisplayName("Ảnh đại diện")]
         public IFormFile ImageFile { get; set; }
 
         [DisplayName("Còn hoạt động")]

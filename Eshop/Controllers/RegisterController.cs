@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using System;
+using System.Drawing;
 using System.Security.Cryptography;
 using System.Security.Principal;
 using System.Text;
@@ -198,10 +199,8 @@ namespace Eshop.Controllers
 
             if (ModelState.IsValid)
             {
-                if (AccountExists(id))
-                {
-                    var account = await _context.Accounts.FindAsync(id);
-                    var user = new Account()
+               string img = _context.Accounts.Where(im => im.Id==id).Select(i => i.Avatar).ToString();
+                var user = new Account()
                     {
                         Id = id,
                         Username = _account.Username,
@@ -211,15 +210,44 @@ namespace Eshop.Controllers
                         Address = _account.Address,
                         IsAdmin = false,
                         FullName = _account.FullName,
-                        Avatar = account.Avatar,
+                        Avatar = img,
+                        ImageFile = _account.ImageFile,
                     };
+                    
+                    try
+                    {
+                        if(user.ImageFile != null)
+                    {
+                        var file = user.Username.ToString() + Path.GetExtension(user.ImageFile.FileName);
+                        var uploadFolder = Path.Combine(_environmemt.WebRootPath, "images", "avatar");
+                        var path = Path.Combine(uploadFolder, file);
+                        using (FileStream fs = System.IO.File.Create(path))
+                        {
 
-                    _context.Update(user);
-                    await _context.SaveChangesAsync();
+                            user.ImageFile.CopyTo(fs);
+                            fs.Flush();
+                        }
+                        user.Avatar = file;
+                    }
+                       
+                        _context.Accounts.Update(user);
+                        await _context.SaveChangesAsync();
+                    }
+                    catch (DbUpdateConcurrencyException)
+                    {
+                        if (!AccountExists(_account.Id))
+                        {
+                            return NotFound();
+                        }
+                        else
+                        {
+                            throw;
+                        }
+                    }
+                   
                     return RedirectToAction("Details");
-                }
-                return NotFound();
                 
+
             }
             return View(_account);
         }

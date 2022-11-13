@@ -12,7 +12,7 @@
     <div class="card mx-auto" style="max-width:520px; margin-top:40px;">
         <article class="card-body">
             <header class="mb-4"><h4 class="card-title">Chỉnh sửa thông tin cá nhân</h4></header>
-            @using (Html.BeginForm("Edit", "Register", FormMethod.Post))
+            @using (Html.BeginForm("Edit", "Register", FormMethod.Post, new { enctype = "multipart/form-data" }))
             {
                 <div class="form-group">
                     <input type="hidden" asp-for="Id" />
@@ -54,11 +54,11 @@
                     @Html.TextBoxFor(temp => temp.Address, new { placeholder = "Address", @class="form-control"})
                     @Html.ValidationMessageFor(temp => temp.Address)
                 </div>
-                @*<div class="form-group">
-                    @Html.LabelFor(temp => temp.Avatar)
-                    @Html.TextBoxFor(temp => temp.Avatar, new { placeholder = "Avatar", @class="form-control"})
-                    @Html.ValidationMessageFor(temp => temp.Avatar)
-                </div>*@
+                <div class="form-group">
+                    @Html.LabelFor(temp => temp.ImageFile)
+                    @Html.EditorFor(temp => temp.ImageFile, new { placeholder = "Avatar", @class="form-control"})
+                    @Html.ValidationMessageFor(temp => temp.ImageFile)
+                </div>
                 <button type="submit" class="btn btn-primary btn-block">Lưu</button>
                 <p class="text-danger">@ViewBag.ErrorMsg</p>
             }
