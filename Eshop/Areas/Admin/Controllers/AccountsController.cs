@@ -45,7 +45,7 @@ namespace Eshop.Areas.Admin.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> Create([Bind("Id,Username,Password,ConfirmPassword,Email,Phone,Address,FullName,IsAdmin,Avatar,Status")] Account account)
+        public async Task<IActionResult> Create([Bind("Id,Username,Password,ConfirmPassword,Email,Phone,Address,FullName,IsAdmin,Avatar,ImageFile,Status")] Account account)
         {
             if (ModelState.IsValid)
             {
@@ -53,8 +53,8 @@ namespace Eshop.Areas.Admin.Controllers
                 await _context.SaveChangesAsync();
                 if (account.ImageFile != null)
                 {
-                    var fileName = account.Id.ToString() + Path.GetExtension(account.ImageFile.FileName);
-                    var uploadFolder = Path.Combine(_environment.WebRootPath, "images", "account");
+                    var fileName = account.Username.ToString() + Path.GetExtension(account.ImageFile.FileName);
+                    var uploadFolder = Path.Combine(_environment.WebRootPath, "images", "avatar");
                     var uploadPath = Path.Combine(uploadFolder, fileName);
                     using (FileStream fs = System.IO.File.Create(uploadPath))
                     {
@@ -85,7 +85,7 @@ namespace Eshop.Areas.Admin.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Username,Password,Email,Phone,Address,FullName,IsAdmin,Avatar,Status")] Account account)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Username,Password,ConfirmPassword,Email,Phone,Address,FullName,IsAdmin,Avatar,ImageFile,Status")] Account account)
         {
             if (id != account.Id)
             {
@@ -96,11 +96,12 @@ namespace Eshop.Areas.Admin.Controllers
             {
                 try
                 {
-                    var file = Path.GetFileName(account.ImageFile.FileName);
-                    var uploadFolder = Path.Combine(_environment.WebRootPath, "img", "product");
+                    var file = account.Username.ToString() + Path.GetExtension(account.ImageFile.FileName);
+                    var uploadFolder = Path.Combine(_environment.WebRootPath, "images", "avatar");
                     var path = Path.Combine(uploadFolder, file);
                     using (FileStream fs = System.IO.File.Create(path))
                     {
+                        
                         account.ImageFile.CopyTo(fs);
                         fs.Flush();
                     }
