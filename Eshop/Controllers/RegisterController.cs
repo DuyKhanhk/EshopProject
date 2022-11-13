@@ -200,6 +200,7 @@ namespace Eshop.Controllers
             {
                 if (AccountExists(id))
                 {
+                    var account = await _context.Accounts.FindAsync(id);
                     var user = new Account()
                     {
                         Id = id,
@@ -210,7 +211,7 @@ namespace Eshop.Controllers
                         Address = _account.Address,
                         IsAdmin = false,
                         FullName = _account.FullName,
-                        Avatar = "customer.jpg",
+                        Avatar = account.Avatar,
                     };
 
                     _context.Update(user);
