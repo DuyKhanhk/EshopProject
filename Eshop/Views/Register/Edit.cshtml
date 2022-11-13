@@ -54,11 +54,11 @@
                     @Html.TextBoxFor(temp => temp.Address, new { placeholder = "Address", @class="form-control"})
                     @Html.ValidationMessageFor(temp => temp.Address)
                 </div>
-                <div class="form-group">
+                @*<div class="form-group">
                     @Html.LabelFor(temp => temp.Avatar)
                     @Html.TextBoxFor(temp => temp.Avatar, new { placeholder = "Avatar", @class="form-control"})
                     @Html.ValidationMessageFor(temp => temp.Avatar)
-                </div>
+                </div>*@
                 <button type="submit" class="btn btn-primary btn-block">Lưu</button>
                 <p class="text-danger">@ViewBag.ErrorMsg</p>
             }
