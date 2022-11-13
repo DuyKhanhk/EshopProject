@@ -11,7 +11,7 @@
 <h1>Danh sách loại sản phẩm</h1>
 
 <p>
-     <a href="~/Admin/ProductTypes/Create">Thêm loại sản phẩm mới</a>
+     <a class="btn btn-success" href="~/Admin/ProductTypes/Create">Thêm loại sản phẩm mới</a>
 </p>
 <table class="table">
     <thead>
@@ -35,9 +35,9 @@
                 @Html.DisplayFor(modelItem => item.Status)
             </td>
             <td>
-                    @Html.ActionLink("Edit", "Edit", new { controller = "ProductTypes", id = item.Id })|
-                    @Html.ActionLink("Details", "Details", new { controller = "ProductTypes", id = item.Id })|
-                    @Html.ActionLink("Delete", "Delete", new { controller = "ProductTypes", id = item.Id })|
+                    @Html.ActionLink("Sửa", "Edit", new { controller = "ProductTypes", id = item.Id }, new{@class="btn btn-primary"})
+                    @Html.ActionLink("Thông tin", "Details", new { controller = "ProductTypes", id = item.Id }, new{@class="btn btn-primary"})
+                    @Html.ActionLink("Xóa", "Delete", new { controller = "ProductTypes", id = item.Id },new{@class="btn btn-danger"})
             </td>
         </tr>
 }
