@@ -53,5 +53,26 @@ namespace Eshop.Controllers
             }
                 return RedirectToAction("NotFound_OK","Home");
         }
+
+        public async Task<IActionResult> SearchMultipleCriteria(int? Id)
+        {
+            ViewBag.admin = HttpContext.Session.GetString("admin");
+            ViewBag.username = HttpContext.Session.GetString("username");
+            HomeModel home = new HomeModel();
+
+
+            if (Id.HasValue)
+            {
+                home.ListProducts = await _context.Products.Include(i => i.ProductType).Where(x => x.ProductTypeId == Id).ToListAsync();
+                home.ListProductTypes = await _context.ProductTypes.ToListAsync();
+                return View(home);
+            }
+            else
+            {
+                home.ListProducts = await _context.Products.Include(i => i.ProductType).ToListAsync();
+                home.ListProductTypes = await _context.ProductTypes.ToListAsync();
+                return View(home);
+            }
+        }
     }
 }

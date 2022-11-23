@@ -54,6 +54,7 @@ namespace Eshop.Models
 
         [NotMapped]
         [DisplayName("Ảnh đại diện")]
+        [Required(ErrorMessage = "{0} không được bỏ trống")]
         public IFormFile ImageFile { get; set; }
 
         [DisplayName("Còn hoạt động")]

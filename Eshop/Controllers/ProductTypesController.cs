@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using Eshop.Models;
 
 namespace Eshop.Controllers
 {
@@ -21,18 +22,21 @@ namespace Eshop.Controllers
 		{
             ViewBag.admin = HttpContext.Session.GetString("admin");
             ViewBag.username = HttpContext.Session.GetString("username");
+			HomeModel home = new HomeModel();
 			
 
             if (Id.HasValue)
 			{
-				var lstProduct =await context.Products.Where(x => x.ProductTypeId == Id).ToListAsync();
-                return View(lstProduct);
+				home.ListProducts =await context.Products.Include(i=> i.ProductType).Where(x => x.ProductTypeId == Id).ToListAsync();
+				home.ListProductTypes = await context.ProductTypes.ToListAsync();
+				return View(home);
             }
 			else
 			{
-				var lstProduct =await context.Products.ToListAsync();
-                return View(lstProduct);
-            }
+				home.ListProducts =await context.Products.Include(i => i.ProductType).ToListAsync();
+				home.ListProductTypes = await context.ProductTypes.ToListAsync();
+				return View(home);
+			}
 			
 		}
 

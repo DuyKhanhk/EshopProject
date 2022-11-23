@@ -9,7 +9,7 @@
     <section class="content">
         <div class="container-fluid">
             <div class="card-body">
-<h1>Quảng lý tài khoản</h1>
+<h1>Quản lý tài khoản</h1>
 
 <p>
    <a class="btn btn-success" href="~/Admin/Accounts/Create">Thêm tài khoản</a>
@@ -71,8 +71,8 @@
             <td>
                 @Html.DisplayFor(modelItem => item.IsAdmin)
             </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Avatar)
+            <td >
+                <img width="100" src="~/images/avatar/@item.Avatar" />
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Status)
